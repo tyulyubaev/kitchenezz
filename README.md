@@ -1,15 +1,32 @@
 # Kitchenezz
 
-Static landing page for **kitchenezz.co.uk**, focused on independent Wren kitchen installation services in London.
+Node.js website for **kitchenezz.co.uk**, focused on independent Wren kitchen installation services in London.
 
-## Current files
+## Run locally
 
-- `index.html`
-- `style.css`
+Install the dependencies and start the development server:
 
-## GitHub Pages
+```bash
+npm install
+npm run dev
+```
 
-Publish from the `main` branch and `/ (root)` in **Settings → Pages**.
+Open [http://localhost:3000](http://localhost:3000) in a browser.
+
+For production, set the optional `PORT` environment variable and run:
+
+```bash
+npm start
+```
+
+## Project structure
+
+- `server.js` — Express web server
+- `index.html` — website content
+- `style.css` — website styling
+- `assets/` — website images
+
+> GitHub Pages only hosts static files and cannot run the Node.js server. Deploy the Node.js app with a Node-compatible hosting provider.
 
 ## Next updates
 
