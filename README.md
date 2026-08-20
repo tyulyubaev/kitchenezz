@@ -28,6 +28,16 @@ npm start
 
 > GitHub Pages only hosts static files and cannot run the Node.js server. Deploy the Node.js app with a Node-compatible hosting provider.
 
+## Deploy on Render
+
+The repository includes a `render.yaml` Blueprint. In Render, create a new Blueprint from this GitHub repository and enter the three requested secret environment variables:
+
+- `RESEND_API_KEY`
+- `ESTIMATE_EMAIL_TO`
+- `ESTIMATE_EMAIL_FROM`
+
+Render installs dependencies with `npm ci`, starts the app with `npm start`, and checks `/health`. Test the generated `onrender.com` address before connecting the custom domain.
+
 ## Next updates
 
 - Add genuine project photos

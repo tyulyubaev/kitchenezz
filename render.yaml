@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: kitchenezz
+    runtime: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: RESEND_API_KEY
+        sync: false
+      - key: ESTIMATE_EMAIL_TO
+        sync: false
+      - key: ESTIMATE_EMAIL_FROM
+        sync: false

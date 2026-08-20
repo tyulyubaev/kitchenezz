@@ -21,6 +21,10 @@ const escapeHtml = (value) => String(value).replaceAll("&", "&amp;").replaceAll(
 app.disable("x-powered-by");
 app.use(express.json({ limit: "10kb" }));
 
+app.get("/health", (_request, response) => {
+  response.json({ status: "ok" });
+});
+
 app.post("/api/estimate", async (request, response) => {
   const body = request.body || {};
   if (body.company) return response.json({ ok: true });
