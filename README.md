@@ -38,6 +38,14 @@ The repository includes a `render.yaml` Blueprint. In Render, create a new Bluep
 
 Render installs dependencies with `npm ci`, starts the app with `npm start`, and checks `/health`. Test the generated `onrender.com` address before connecting the custom domain.
 
+## Deploy on Vercel
+
+Vercel serves the website files statically and deploys `api/estimate.js` as a serverless function. Import the GitHub repository with Framework Preset set to **Other**, leave the Root Directory blank, and add these Production environment variables:
+
+- `RESEND_API_KEY`
+- `ESTIMATE_EMAIL_TO`
+- `ESTIMATE_EMAIL_FROM`
+
 ## Next updates
 
 - Add genuine project photos
