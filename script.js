@@ -127,3 +127,115 @@ if (calculatorForm) {
 const calculatorContactStyles = document.createElement("style");
 calculatorContactStyles.textContent = `.calculator-contact{display:grid;gap:12px;margin-top:18px}.calculator-contact[hidden]{display:none}.calculator-contact a{display:flex;align-items:center;justify-content:center;min-height:56px;padding:10px 18px;background:#2d7d52;color:#fff;border-radius:999px;font-weight:600;text-align:center;transition:.2s ease}.calculator-contact a:hover{background:#246b46;transform:translateY(-1px)}`;
 document.head.append(calculatorContactStyles);
+
+const consentStorageKey = "kitchenezz_analytics_consent";
+const cookieBanner = document.querySelector("#cookie-banner");
+const acceptAnalyticsButton = document.querySelector("#cookie-accept");
+const rejectAnalyticsButton = document.querySelector("#cookie-reject");
+const cookieSettingsButton = document.querySelector("#cookie-settings");
+let analyticsLoaded = false;
+
+const readConsentChoice = () => {
+  try {
+    return localStorage.getItem(consentStorageKey);
+  } catch (_error) {
+    return null;
+  }
+};
+
+const saveConsentChoice = (choice) => {
+  try {
+    localStorage.setItem(consentStorageKey, choice);
+  } catch (_error) {
+    // Continue without persistence when browser storage is unavailable.
+  }
+};
+
+const setConsentControls = (showBanner) => {
+  if (!cookieBanner || !cookieSettingsButton) return;
+  cookieBanner.hidden = !showBanner;
+  cookieSettingsButton.hidden = showBanner;
+};
+
+const loadGoogleTag = () => {
+  if (document.querySelector('script[data-google-tag="AW-17024632888"]')) return;
+
+  window.gtag("consent", "update", {
+    ad_storage: "granted",
+    ad_user_data: "granted",
+    ad_personalization: "granted",
+    analytics_storage: "granted"
+  });
+  window.gtag("js", new Date());
+  window.gtag("config", "AW-17024632888");
+
+  const googleTag = document.createElement("script");
+  googleTag.async = true;
+  googleTag.src = "https://www.googletagmanager.com/gtag/js?id=AW-17024632888";
+  googleTag.dataset.googleTag = "AW-17024632888";
+  document.head.append(googleTag);
+};
+
+const loadClarity = () => {
+  if (document.querySelector('script[data-clarity-tag="yi4dcro9nm"]')) return;
+
+  window.clarity = window.clarity || function clarityQueue() {
+    (window.clarity.q = window.clarity.q || []).push(arguments);
+  };
+  window.clarity("consentv2", {
+    ad_Storage: "granted",
+    analytics_Storage: "granted"
+  });
+
+  const clarityTag = document.createElement("script");
+  clarityTag.async = true;
+  clarityTag.src = "https://www.clarity.ms/tag/yi4dcro9nm";
+  clarityTag.dataset.clarityTag = "yi4dcro9nm";
+  document.head.append(clarityTag);
+};
+
+const enableAnalytics = () => {
+  analyticsLoaded = true;
+  calculatorForm?.setAttribute("data-clarity-mask", "true");
+  loadGoogleTag();
+  loadClarity();
+};
+
+acceptAnalyticsButton?.addEventListener("click", () => {
+  saveConsentChoice("granted");
+  enableAnalytics();
+  setConsentControls(false);
+});
+
+rejectAnalyticsButton?.addEventListener("click", () => {
+  saveConsentChoice("denied");
+  window.gtag?.("consent", "update", {
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied",
+    analytics_storage: "denied"
+  });
+  window.clarity?.("consentv2", {
+    ad_Storage: "denied",
+    analytics_Storage: "denied"
+  });
+
+  if (analyticsLoaded) {
+    window.location.reload();
+    return;
+  }
+
+  setConsentControls(false);
+});
+
+cookieSettingsButton?.addEventListener("click", () => setConsentControls(true));
+
+const savedConsentChoice = readConsentChoice();
+if (savedConsentChoice === "granted") {
+  enableAnalytics();
+  setConsentControls(false);
+} else if (savedConsentChoice === "denied") {
+  setConsentControls(false);
+} else {
+  setConsentControls(true);
+}
