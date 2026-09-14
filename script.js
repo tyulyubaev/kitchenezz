@@ -89,6 +89,7 @@ if (calculatorForm) {
     submitButton.textContent = "Sending…";
     statusMessage.textContent = "Your estimate is ready. Sending your details to Kitchenezz…";
     statusMessage.classList.remove("is-error", "is-success");
+    window.gtag_report_conversion();
 
     try {
       const response = await fetch("/api/estimate", {
@@ -149,6 +150,27 @@ const saveConsentChoice = (choice) => {
   } catch (_error) {
     // Continue without persistence when browser storage is unavailable.
   }
+};
+
+window.gtag_report_conversion = (url) => {
+  const callback = () => {
+    if (typeof url !== "undefined") window.location = url;
+  };
+
+  if (
+    analyticsLoaded &&
+    readConsentChoice() === "granted" &&
+    typeof window.gtag === "function"
+  ) {
+    window.gtag("event", "conversion", {
+      send_to: "AW-17024632888/fMFyCJ_kt_ccELiQ_bU_",
+      value: 1.0,
+      currency: "GBP",
+      event_callback: callback
+    });
+  }
+
+  return false;
 };
 
 const setConsentControls = (showBanner) => {
